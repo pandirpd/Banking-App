@@ -21,6 +21,7 @@
     "@types/node": "^26.2.0"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "mysql2": "^3.24.2"
   }
 }
