@@ -8,7 +8,7 @@ for(const loginData of invalidLoginData){
         await page.goto('index.htm');
         await loginPage.login(loginData.username,loginData.password);
               await expect(page.locator('#rightPanel')).toContainText(
-        'internal error');
+        'The username and password could not be verified');
     }
     );
 }
