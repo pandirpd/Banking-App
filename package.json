@@ -19,5 +19,9 @@
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "@types/node": "^26.2.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "otplib": "^13.5.0"
   }
 }
