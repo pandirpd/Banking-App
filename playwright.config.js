@@ -1,6 +1,10 @@
 // @ts-check
-import { defineConfig, devices } from '@playwright/test';
+const { defineConfig, devices } = require('@playwright/test');
+const dotenv = require('dotenv');
 
+dotenv.config({
+  path: `.env.${process.env.TEST_ENV || 'qa'}`,
+});
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -12,7 +16,7 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
-export default defineConfig({
+module.exports = defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -23,14 +27,19 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [
+  ['html', { open: 'never' }],
+  ['junit', { outputFile: 'test-results/results.xml' }],
+],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: 'https://parabank.parasoft.com/parabank/',
+    baseURL: process.env.BASE_URL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
+  globalSetup: require.resolve('./globals/global-setup'),
+  globalTeardown: require.resolve('./globals/global-teardown'),
 
   /* Configure projects for major browsers */
   projects: [
@@ -48,6 +57,18 @@ export default defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
+
+    {
+      name: 'mobile-chrome',
+      use: {...devices['Pixel 5'],},
+  },
+
+  {
+  name: 'mobile-safari',
+  use: {
+    ...devices['iPhone 12'],
+  },
+},
 
     /* Test against mobile viewports. */
     // {
