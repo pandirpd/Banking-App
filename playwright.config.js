@@ -31,7 +31,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
-
+  globalSetup: require.resolve('./globals/global-setup'),
   /* Configure projects for major browsers */
   projects: [
     {
