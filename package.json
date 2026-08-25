@@ -10,7 +10,8 @@
     "test:ui": "playwright test --grep @ui",
     "test:login": "playwright test --grep @login",
     "report": "playwright show-report",
-    "test:api": "playwright test --grep @api"
+    "test:api": "playwright test --grep @api",
+    "test:mysql": "TEST_ENV=qa playwright test tests/mysql.spec.js"
   },
   "keywords": [],
   "author": "",
