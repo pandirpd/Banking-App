@@ -6,3 +6,7 @@ playwright-report/
 blob-report/
 playwright/.cache/
 test-data/runtime-credentials.json
+.env.*
+!.env.example
+.env.*
+!.env.example

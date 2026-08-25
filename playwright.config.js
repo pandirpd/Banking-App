@@ -1,5 +1,14 @@
 // @ts-check
-import { defineConfig, devices } from '@playwright/test';
+const path = require('node:path');
+const dotenv = require('dotenv');
+const { defineConfig, devices } = require('@playwright/test');
+
+dotenv.config({
+  path: path.resolve(
+    __dirname,
+    `./.env.${process.env.TEST_ENV || 'qa'}`
+  ),
+});
 
 /**
  * Read environment variables from file.
@@ -12,8 +21,10 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
-export default defineConfig({
+module.exports = defineConfig({
   testDir: './tests',
+  globalSetup: require.resolve('./globals/global-setup'),
+  globalTeardown: require.resolve('./globals/global-teardown'),
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -23,10 +34,13 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [
+    ['html', { open: 'never' }],
+    ['junit', { outputFile: 'test-results/results.xml' }],
+  ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: 'https://parabank.parasoft.com/parabank/',
+    baseURL: process.env.BASE_URL || 'https://parabank.parasoft.com/parabank/',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

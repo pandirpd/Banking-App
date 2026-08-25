@@ -1,0 +1,30 @@
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20.x'
+    displayName: Install Node.js
+
+  - script: npm ci
+    displayName: Install dependencies
+
+  - script: npx playwright install --with-deps chromium
+    displayName: Install Playwright browser
+
+  - script: npx playwright test --project=chromium
+    displayName: Run Playwright tests
+    env:
+      TEST_ENV: qa
+      BASE_URL: https://parabank.parasoft.com/parabank/
+
+  - task: PublishTestResults@2
+    condition: always()
+    inputs:
+      testResultsFormat: JUnit
+      testResultsFiles: 'test-results/results.xml'
+      failTaskOnFailedTests: true
