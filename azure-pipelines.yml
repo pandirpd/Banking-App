@@ -16,11 +16,14 @@ steps:
   - script: npx playwright install --with-deps chromium
     displayName: Install Playwright browser
 
+
   - script: npx playwright test --project=chromium
     displayName: Run Playwright tests
     env:
       TEST_ENV: qa
       BASE_URL: https://parabank.parasoft.com/parabank/
+      TEST_USERNAME: $(TEST_USERNAME)
+      TEST_PASSWORD: $(TEST_PASSWORD)
 
   - task: PublishTestResults@2
     condition: always()
